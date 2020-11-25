@@ -20,10 +20,11 @@ function boardCreate(props) {
         Authorization : `Token ${props.token}`
       }
       axios.post('http://3.34.100.138:8000/boards/post/', {
+        board : router.query.board_id,
         title : title.value,
         content : content
       }).then((res) => {
-        router.push('/board')
+        router.push({ pathname : '/board', query : { ...router.query }})
       }).catch((err) => {
         router.push({ pathname : '/error' , query : { err : "auth" } })   
       })
@@ -31,6 +32,7 @@ function boardCreate(props) {
   }
 
   useEffect(() =>{
+    console.log("boardCreate useEffect : ", props, router.query)
     if (props.token == 'fail') {
         router.push({ pathname : '/error' , query : { err : "auth" } })   
     }
@@ -43,6 +45,7 @@ function boardCreate(props) {
     <Layout>
       { props.token !== null && 
           <div className="board-create">
+            <h2>{router.query.board_name}</h2>
             <div className='title'>
               <input ref={ref => title = ref } type="text" placeholder="제목"></input>
             </div>
@@ -53,8 +56,14 @@ function boardCreate(props) {
       }
       <style jsx>{`
         .board-create {
-          margin : 50px;
+          margin : 40px;
         }
+        .board-create > h2 {
+          font-size : 22px;
+          font-weight : 500;
+          color : #555;
+        }
+
         .title {
           margin-top : 10px;
           padding: 10px 0 20px 0;

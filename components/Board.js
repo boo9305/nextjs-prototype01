@@ -22,7 +22,12 @@ export default function Board(props) {
 
   return (
     <div className="board">
-      <h1>자유 게시판</h1>
+      <div className="board-top">
+        <h1>{props.board_name}</h1>
+        <div className="board-create-btn">
+          <Link href={{ pathname : '/boardCreate', query : { board_name : props.board_name, board_id : props.board_id} } }><a>글쓰기</a></Link>
+        </div> 
+      </div>
       <ul>
         {
           props.posts.map((item, index) => 
@@ -52,6 +57,7 @@ export default function Board(props) {
           )
         }
       </ul>
+
 
       <div className="board-page">
         <ul>
@@ -101,13 +107,26 @@ export default function Board(props) {
           margin : 40px;
         }
         
-        .board > h1 {
-          padding : 10px 0 10px 0;
+        .board-top {
+          border-bottom : 1px solid black;
+          height : 50px;
+        }
+        
+        .board-top > h1 {
+          float : left;
           font-size : 22px;
           font-weight : 500;
+          line-height : 50px;
           color : #555;
-          border-bottom : 1px solid black
         }
+        .board-create-btn > a{
+          margin : 5px;
+          padding : 5px 10px 5px 10px;
+          float : right;
+          border : 1px solid #dfdfdf;
+          color : #ff5656;
+        }
+
         
         .board > ul > li {
           padding-bottom : 20px;

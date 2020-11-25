@@ -7,10 +7,10 @@ import { authCheck , authLogout} from '../stores/actions/auth'
 
 function Layout(props) {
   const listObj = [
-    { "name" : "홈" , "url" : "/"},
-    { "name" : "자유 게시판" , "url" : "/board" , 'query' : { board : 1 } },
-    { "name" : "공지사항" , "url" : "/board" , 'query' : { board : 2 } },
-    { "name" : "글쓰기" , "url" : "/boardCreate"},
+    { "board_name" : "홈" , "url" : "/"},
+    { "board_name" : "자유 게시판" , "url" : "/board" , 'query' : { board_id : '1' } },
+    { "board_name" : "공지사항" , "url" : "/board" , 'query' : { board_id : 2 } },
+    { "board_name" : "글쓰기" , "url" : "/boardCreate"},
   ]
   const sideWidth = "200px"
 

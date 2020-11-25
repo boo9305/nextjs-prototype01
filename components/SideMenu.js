@@ -31,8 +31,8 @@ function SideMenu(props) {
             <li key={index}>
               <Link href={{ 
                 pathname : item['url'],
-                query : item['query']
-              } }><a>{item['name']}</a></Link>
+                query : { board_name : item['board_name'], ...item['query'] }
+              } }><a>{item['board_name']}</a></Link>
             </li>
           )
         }
