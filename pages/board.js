@@ -42,7 +42,7 @@ export async function getServerSideProps (ctx) {
     page = ctx.query.page 
   }
 
-  let resp = await  axios.get('http://3.34.100.138:8000/boards/post/', { params : {page : page , board : board_id }})
+  let resp = await  axios.get('https://3.34.100.138:8000/boards/post/', { params : {page : page , board : board_id }})
 
   return { props : {
     'posts' : resp.data.posts , 

@@ -22,7 +22,7 @@ function boardDetail(props) {
         'Content-Type' : 'application/json',
         Authorization : `Token ${props.token}`
       }
-      axios.get(`http://3.34.100.138:8000/boards/post/${props.pk}/`, 
+      axios.get(`https://3.34.100.138:8000/boards/post/${props.pk}/`, 
       ).then((res) => {
         console.log("boards/post : ", res.data)
         setPost(res.data.post)
@@ -44,7 +44,7 @@ function boardDetail(props) {
       'Content-Type' : 'application/json',
       Authorization : `Token ${props.token}`
     }
-    axios.post(`http://3.34.100.138:8000/boards/comment/`, {
+    axios.post(`https://3.34.100.138:8000/boards/comment/`, {
       content : content,
       post : `${props.pk}`
     }).then((res) => {
@@ -63,7 +63,7 @@ function boardDetail(props) {
       'Content-Type' : 'application/json',
       Authorization : `Token ${props.token}`
     }
-    axios.get(`http://3.34.100.138:8000/boards/like/`, {
+    axios.get(`https://3.34.100.138:8000/boards/like/`, {
       params : {
         post : `${props.pk}`
       }

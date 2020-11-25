@@ -19,7 +19,7 @@ function boardCreate(props) {
         'Content-Type' : 'application/json',
         Authorization : `Token ${props.token}`
       }
-      axios.post('http://3.34.100.138:8000/boards/post/', {
+      axios.post('https://3.34.100.138:8000/boards/post/', {
         board : router.query.board_id,
         title : title.value,
         content : content
