@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { default_url } from '../url'
 export const AUTH_INIT = "AUTH_INIT"
 export const AUTH_LOGIN = "AUTH_LOGIN"
 export const AUTH_LOGOUT = "AUTH_LOGOUT"
@@ -11,16 +11,18 @@ export const authSuccess = (token, id) => {
     type : AUTH_SUCCESS,
     token : token,
     id : id,
-    err : null
+    err : null,
+    isLogin : true,
   }
 }
 
 export const authFail = (err) => {
   return {
     type : AUTH_FAIL,
-    token : 'fail',
+    token : null,
     id : null,
-    err : err
+    err : err,
+    isLogin : false,
   }
 }
 
@@ -37,7 +39,7 @@ export const authLogin = (id, pw) => {
     console.log("login : ",id,pw)
     axios.defaults.headers = {
     }
-    axios.post('http://3.34.100.138:8000/rest_auth/login/', {
+    axios.post(default_url + '/rest_auth/login/', {
       username : id,
       password : pw,
     }).then(res => {
@@ -56,29 +58,24 @@ export const authLogout = () => {
   localStorage.removeItem('id')
   
   return dispatch => {
-    axios.post('http://3.34.100.138:8000/rest_auth/logout/').then(res => {
-      dispatch(authInit())
+    axios.post(default_url + '/rest_auth/logout/').then(res => {
+      dispatch(authFail())
     }).catch(err => {
-      dispatch(authInit())
+      dispatch(authFail())
     })
   }
 }
 
 export const authCheck = () => {
   return dispatch => {
-    let key = localStorage.getItem("token")
+    let token = localStorage.getItem("token")
     let id = localStorage.getItem("id")
 
-    if (key === null || id === null) {
+    if (token !== null && id !== null) {
+      dispatch(authSuccess(token, id))
+    } else {
       localStorage.removeItem('token')
       localStorage.removeItem('id')
-      key = null
-      id = null
-    }
-
-    if (key !== null) {
-      dispatch(authSuccess(key, id))
-    } else {
       dispatch(authFail('login fail'))
     }
   }

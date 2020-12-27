@@ -1,6 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { useRouter } from 'next/router'
 import { connect } from 'react-redux'
+import { default_url } from '../stores/url'
 
 import axios from 'axios'
 
@@ -19,7 +20,7 @@ function boardCreate(props) {
         'Content-Type' : 'application/json',
         Authorization : `Token ${props.token}`
       }
-      axios.post('https://3.34.100.138:8000/boards/post/', {
+      axios.post(default_url + '/boards/post/', {
         board : router.query.board_id,
         title : title.value,
         content : content
@@ -28,6 +29,8 @@ function boardCreate(props) {
       }).catch((err) => {
         router.push({ pathname : '/error' , query : { err : "auth" } })   
       })
+    } else {
+        router.push({ pathname : '/error' , query : { err : "auth" } })   
     }
   }
 

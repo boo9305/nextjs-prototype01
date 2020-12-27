@@ -2,23 +2,21 @@ import React, {useState, useEffect} from 'react'
 import Link from 'next/link'
 
 export default function Board(props) {
-  const [ pageArr, setPageArr]  = useState([]);
-  let max_page = props.max_page;
-
+  const [searchText , setSearchText] = useState("")
+  const [arrTitle , setArrTitle] = useState([])
   useEffect(() => {
-    console.log("board", props)
-    let _pageArr = []
-    let start_page = parseInt((props.page - 1) / (max_page)) * max_page + 1;
-    let end_page = start_page + max_page - 1;
+    if (props.search) {
+      let _arrTitle = []
+      props.posts.map((item,index) => {
+        let t = item['title']
+        let pos = t.indexOf(props.search)
+        //let s = t.substring(pos , pos + props.search.length)
 
-    console.log(start_page, end_page)
-    for (let i = start_page; i <= end_page ; i++) {
-      if (i > props.total_page) break;
-      _pageArr.push(i)
+        _arrTitle[index] = <p>{t.substring(0,pos)}<span style={{background:'yellow'}}>{t.substring(pos, pos + props.search.length)}</span>{t.substring(pos+props.search.length)}</p>
+      })
+      setArrTitle(_arrTitle)
     }
-    setPageArr(_pageArr)
-
-  }, [props.page])
+  }, [props.search, props.posts])
 
   return (
     <div className="board">
@@ -41,7 +39,9 @@ export default function Board(props) {
                 query : { pk : item['id'] }
               }}>
                 <a draggable='false'>
-                  <p>{ item['title'] }</p> 
+
+                  { props.search ? arrTitle[index] : <p> {item['title']}</p>}
+                  { /*<p>{ item['title'] }</p>*/ } 
                 </a>
               </Link>
 
@@ -58,6 +58,11 @@ export default function Board(props) {
         }
       </ul>
 
+      <form onSubmit={(e) => props.onSearchSubmit(e, searchText)}>
+        <input type="text"  onChange={(e) => setSearchText(e.target.value)} value={searchText} />
+        <input type="submit" value="search"/>
+      </form>
+
 
       <div className="board-page">
         <ul>
@@ -71,7 +76,7 @@ export default function Board(props) {
               <li></li>
           }
           {
-            pageArr.map((item, index) =>
+            props.pageArr.map((item, index) =>
               <li key={index} >
                 <Link href={{ pathname : "/board/" , query : { page : item }}}>
                   <a className={ item == props.page && 'active' } >{item}</a>

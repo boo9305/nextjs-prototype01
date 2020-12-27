@@ -1,40 +1,51 @@
 import React, {useState, useEffect} from 'react'
-import { useRouter } from 'next/router'
+import { withRouter , useRouter} from 'next/router'
 import { connect } from 'react-redux'
-import axios from 'axios'
+import { default_url } from '../stores/url'
 
+import axios from 'axios'
 import Layout from '../components/Layout'
 import BoardDetail from '../components/BoardDetail'
 
 
 function boardDetail(props) {
-  const router = useRouter()
-
+  const router = useRouter();
   const [post, setPost] = useState(null)
   const [comments , setComments] = useState([])
   const [likes_count , setLikesCount] = useState(0)
   const [is_liked , setIsLiked] = useState(false)
 
+  const fetchPost = () => {
+    axios.defaults.headers = {
+      'Content-Type' : 'application/json',
+      Authorization : `Token ${props.token}`
+    }
+    axios.get(default_url + `/boards/post/${props.router.query.pk}/`, 
+    ).then((res) => {
+      console.log("boards/post : ", res.data)
+      setPost(res.data)
+      setComments(res.data.comment)
+      setLikesCount(res.data.likes_count)
+      setIsLiked(res.data.is_liked)
+    }).catch((err) => {
+      props.router.push({ pathname : '/error' , query : { err : "auth" } })   
+    })
+
+  }
+
   useEffect(() => {
-    console.log(props.token, props.pk, process.browser)
-    if (props.token !== null) {
-      axios.defaults.headers = {
-        'Content-Type' : 'application/json',
-        Authorization : `Token ${props.token}`
-      }
-      axios.get(`https://3.34.100.138:8000/boards/post/${props.pk}/`, 
-      ).then((res) => {
-        console.log("boards/post : ", res.data)
-        setPost(res.data.post)
-        setComments(res.data.comments)
-        setLikesCount(res.data.post.likes_count)
-        setIsLiked(res.data.is_liked)
-      }).catch((err) => {
-        router.push({ pathname : '/error' , query : { err : "auth" } })   
-      })
+    console.log(props.token, props.router.query.pk, process.browser)
+    if (props.router.query.pk === undefined) {
+      return;
+    }
+
+    if (props.isLogin === true) {
+      fetchPost();
+    } else {
+        props.router.push({ pathname : '/error' , query : { err : "auth" } })   
     } 
 
-  }, [props.token])
+  }, [props.isLogin, props.router])
 
   const onCommentClick = (content) => {
     if (props.token === null || props.token === 'fail') {
@@ -44,13 +55,14 @@ function boardDetail(props) {
       'Content-Type' : 'application/json',
       Authorization : `Token ${props.token}`
     }
-    axios.post(`https://3.34.100.138:8000/boards/comment/`, {
+    axios.post(default_url + `/boards/comment/`, {
       content : content,
-      post : `${props.pk}`
+      post : `${props.router.query.pk}`
     }).then((res) => {
-      setComments(res.data)
+      //setComments(res.data)
+      fetchPost()
     }).catch((err) => {
-      router.push({ pathname : '/error' , query : { err : "auth" } })   
+      props.router.push({ pathname : '/error' , query : { err : "auth" } })   
     })
   }
 
@@ -63,9 +75,9 @@ function boardDetail(props) {
       'Content-Type' : 'application/json',
       Authorization : `Token ${props.token}`
     }
-    axios.get(`https://3.34.100.138:8000/boards/like/`, {
+    axios.get(default_url + `/boards/like/`, {
       params : {
-        post : `${props.pk}`
+        post : `${props.router.query.pk}`
       }
     }).then((res) => {
       setLikesCount(res.data.likes_count)
@@ -100,12 +112,7 @@ function boardDetail(props) {
 const mapReduxStateToReactState = state => {
   return {
     token : state.auth.token,
+    isLogin : state.auth.isLogin,
   }
 }
-
-export async function getServerSideProps (ctx) {
-  let pk = 1;
-  if (ctx.query.pk !== undefined || ctx.query.pk !== "") pk = ctx.query.pk
-  return {props : {'pk' : pk }}
-}
-export default connect(mapReduxStateToReactState,null)(boardDetail);
+export default withRouter(connect(mapReduxStateToReactState,null)(boardDetail));

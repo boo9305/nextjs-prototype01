@@ -17,13 +17,13 @@ function SideMenu(props) {
   return (
     <div className="side-menu">
       <ul>
-        { props.id !== null ? 
+        { props.isLogin === true ? 
             <li>{props.id}님 반갑습니다</li>
             :
-            <li><Link href="/login"><a>로그인해주세요.</a></Link></li>
+            <li><Link href="/login"><a>로그인해주세요.{props.token ? <p>true</p> : <p>false</p> }</a></Link></li>
         }
         { 
-          props.id !== null && <li><a onClick={() => onLogoutClick()}>로그아웃</a></li>
+          props.isLogin === true && <li><a onClick={() => onLogoutClick()}>로그아웃</a></li>
         }
 
         {
@@ -52,7 +52,7 @@ function SideMenu(props) {
           width : ${props.width};
           height : 100vh;
           border-right : 1px solid #dfdfdf;
-          background-color : #333;
+          background-color : #fff;
         }
 
         .side-menu > ul  {
@@ -67,7 +67,7 @@ function SideMenu(props) {
         .side-menu > ul > li > a {
           font-size : 15px;
           font-weight : 400;
-          color : #999;
+          color : #444;
         }
         `}</style>
     </div>
@@ -77,7 +77,8 @@ function SideMenu(props) {
 const mapReduxStateToReactProps = (state) => {
   return {
     token : state.auth.token ,
-    id : state.auth.id
+    id : state.auth.id,
+    isLogin : state.auth.isLogin,
   }
 }
 

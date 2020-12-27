@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start"
   },
   "dependencies": {
@@ -12,10 +12,12 @@
     "axios": "^0.21.0",
     "next": "10.0.1",
     "package.json": "^2.0.1",
+    "pm2": "^4.5.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
-  }
+  },
+  "proxy": "http://3.34.100.138:8000"
 }

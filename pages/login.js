@@ -14,10 +14,10 @@ function login(props) {
   const [token, setToken] = useState(null)
   
   useEffect(() => {
-    if (props.token !== 'fail') {
+    if (props.isLogin === true ) {
       route.push("/")
     }
-  })
+  }, [props.isLogin])
   const onSubmit = (e) => {
     e.preventDefault()
     props.login(id, pw)  
@@ -25,6 +25,7 @@ function login(props) {
 
   return (
     <Layout>
+      { props.isLogin === false &&
       <div className="login">
         <form onSubmit={(e) => onSubmit(e)}>
           <div className="input">
@@ -37,14 +38,14 @@ function login(props) {
           </div>
 
           <input type='submit' className="login-btn" value='LOGIN'/>
-        
+
         </form>
 
         <div className="login-other">
           <div className="password-change"><a>비밀번호 재설정</a></div>
           <div className="signup"><a>회원가입</a></div>
         </div>
-        
+
         <div className="social-login">
           <h2>SNS계정으로 간편 로그인/회원가입</h2>
           <img src="/imgs/google.svg" alt=""></img>
@@ -52,6 +53,7 @@ function login(props) {
         </div>
 
       </div>
+      }
       <style jsx>{`
         .login {
           margin : 0 auto;
@@ -123,14 +125,8 @@ const mapReduxDispatchToReactProps = dispatch => {
 const mapReduxStateToReactProps = state => {
   return {
     token : state.auth.token,
-    id : state.auth.id
-  }
-}
-
-export async function getServerSideProps (ctx) {
-  return {
-    props : {
-    }
+    id : state.auth.id,
+    isLogin : state.auth.isLogin,
   }
 }
 

@@ -8,16 +8,15 @@ import { authCheck , authLogout} from '../stores/actions/auth'
 function Layout(props) {
   const listObj = [
     { "board_name" : "홈" , "url" : "/"},
-    { "board_name" : "자유 게시판" , "url" : "/board" , 'query' : { board_id : '1' } },
-    { "board_name" : "공지사항" , "url" : "/board" , 'query' : { board_id : 2 } },
-    { "board_name" : "글쓰기" , "url" : "/boardCreate"},
+    { "board_name" : "자유 게시판" , "url" : "/board" , 'query' : { board_id : 1, page : 1} },
+    { "board_name" : "공지사항" , "url" : "/board" , 'query' : { board_id : 2, page : 1 } },
   ]
   const sideWidth = "200px"
 
   useEffect(() => {
     console.log(props.token, props.id)
     props.authCheck();
-  }, [])
+  }, [props.isLogin])
 
   return (
     <div className="layout">
@@ -31,6 +30,14 @@ function Layout(props) {
       </Head>
       <SideMenu width={sideWidth} listObj={listObj}></SideMenu>
         {props.children}
+      <style jsx global> {`
+        .default-list {
+          list-style : none;
+          padding : 0;
+          margin : 0;
+        }
+
+        `} </style>
       <style jsx>
         {`
           .layout {
@@ -46,7 +53,8 @@ function Layout(props) {
 const mapReduxStateToReactProps = (state) => {
   return {
     token : state.auth.token ,
-    id : state.auth.id
+    id : state.auth.id,
+    isLogin : state.auth.isLogin,
   }
 }
 const mapReduxDispatchToReactProps = (dispatch) => {

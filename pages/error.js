@@ -11,8 +11,8 @@ function error(props) {
 
   useEffect(() => {
     if ( route.query.err === 'auth' ) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('id')
+      //localStorage.removeItem('token')
+      //localStorage.removeItem('id')
     }
   })
 
